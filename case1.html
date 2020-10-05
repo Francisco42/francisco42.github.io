@@ -73,6 +73,12 @@
               thalach: Máximo pulso cardíaco alcanzado en ejercicio de prueba
             </li>
           </ul>
+          <p>
+            La variable objetivo (num) representa el diagnóstico. Tiene 5
+            valores posibles. El valor 0 representa ausencia de enfermedad
+            cardíaca, y los valores 1, 2, 3 y 4 representan diferentes grados de
+            enfermedad.
+          </p>
           <h2 class="major">Preparación previa de los datos</h2>
           <p>
             Los archivos provenientes de las 4 instituciones separaban los datos
@@ -121,6 +127,17 @@ def parse_file(readFilename, writeFilename):
             discretos; en la mayoria de ellos, los valores representan
             diferentes clases indicativas de la salud del paciente. Se asume que
             el paciente es "saludable" en un atributo si no existe el valor.
+          </p>
+          <h2 class="major">Modelado</h2>
+          <p>
+            Para construir el modelo se utilizó el algoritmo de de clasificación
+            Naive Bayes. Arboles de Decisión fue considerado como otra
+            alternativa, pero con respecto a éstos datos en particular, hay
+            diagnósticos que son mucho menos probables que otros, por lo tanto
+            se corre el riesgo de que esos casos se pierdan con la poda del
+            árbol, causando que el modelo no los reconozca bien. Al mismo
+            tiempo, si se evita podar el árbol y se aumenta su máxima altura, es
+            probable que se sobreajuste a estos datos.
           </p>
         </div>
       </section>
