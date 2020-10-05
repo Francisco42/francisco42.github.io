@@ -49,9 +49,9 @@
           <p>
             El objetivo de este caso de estudio es generar un modelo de Machine
             Learning que sea capaz de predecir la existencia de dichas
-            enfermedades cardiacas. Para esto se cuenta con con 4 datasets
-            referentes al diagnóstico de enfermedad del corazón, provenientes
-            de:
+            enfermedades cardiacas. Para esto se utilizará la herramienta
+            RapidMiner, y se cuenta con con 4 datasets referentes al diagnóstico
+            de enfermedad del corazón, provenientes de:
           </p>
           <ul>
             <li>Cleveland Clinic Foundation</li>
@@ -73,18 +73,62 @@
               thalach: Máximo pulso cardíaco alcanzado en ejercicio de prueba
             </li>
           </ul>
+          <h2 class="major">Preparación previa de los datos</h2>
+          <p>
+            Los archivos provenientes de las 4 instituciones separaban los datos
+            en más lineas de las necesarias, lo cual impedía importarlos
+            fácilmente en RapidMiner. Además, ninguno de los archivos contaba
+            con una fila de encabezado para los nombres de los atributos. Para
+            resolver ambos de estos problemas, se ejecutó para cada uno de los
+            archivos el siguiente código Python:
+          </p>
+          <pre><code>
+def parse_file(readFilename, writeFilename):
+    headerRow = "id ccf age sex painloc painexer relrest pncaden cp trestbps ..."
+    readfile = open(readFilename, 'r', errors='ignore')
+    writefile = open(writeFilename, 'w')
+    writefile.write(headerRow)
+    writeRow = ""
+    for row in readfile:
+        writeRow += row 
+        if ("name" in row):
+            writefile.write(writeRow)
+            writeRow = ""
+        else:
+            writeRow = writeRow.rstrip()
+            writeRow += " "
+    readfile.close()
+    writefile.close()
+          </code></pre>
+          <p>
+            Luego de ese procesamiento, los archivos se importaron en
+            RapidMiner. Dado que los 4 tienen el mismo formato, fue posible
+            unirlos de manera simple, utilizando el operador "Append". La
+            metadata de estos datasets indica que se utiliza el valor numérico
+            -9 para representar valores faltantes en los atributos, asi que
+            también fue necesario reemplazar todas las ocurrencias de ese valor
+            por valores faltantes, para luego poder manejarlos más facilmente.
+          </p>
+          <span class="image fit"
+            ><img src="images/data_prep_1.PNG" alt=""
+          /></span>
+          <p>
+            A pesar de que todos los atributos son numericos, algunos de ellos
+            son continuos y otros discretos. Los valores faltantes en atributos
+            continuos fueron reemplazados por la media de ese atributo. Esto
+            podría interpretarse como que, ante la duda, un paciente es
+            "promedio". Se emplea un razonamiento similar para los atributos
+            discretos; en la mayoria de ellos, los valores representan
+            diferentes clases indicativas de la salud del paciente. Se asume que
+            el paciente es "saludable" en un atributo si no existe el valor.
+          </p>
         </div>
       </section>
     </div>
 
     <!-- Footer -->
     <footer id="footer" class="wrapper alt">
-      <div class="inner">
-        <ul class="menu">
-          <li>&copy; Untitled. All rights reserved.</li>
-          <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-        </ul>
-      </div>
+      <div class="inner"></div>
     </footer>
 
     <!-- Scripts -->
