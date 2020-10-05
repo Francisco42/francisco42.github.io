@@ -139,6 +139,81 @@ def parse_file(readFilename, writeFilename):
             tiempo, si se evita podar el árbol y se aumenta su máxima altura, es
             probable que se sobreajuste a estos datos.
           </p>
+          <p>
+            Se elaboraron varios modelos utilizando diferentes subconjuntos de atributos, 
+            y se utilizó el operador "Cross Validation" de RapidMiner para evaluar
+            la precisión de cada uno de ellos. 
+          </p>
+            Los modelos fueron elaborados con y sin la corrección de Laplace
+            (el único parámetro del operador Naive Bayes). En todos los casos, el modelo
+            con la corrección fue levemente mas preciso que el que no la tenía. 
+            Por lo tanto, todos los modelos siguientes fueron elaborados con esa corrección.
+          </p>
+          <p>
+              El primer modelo fue elaborado tomando una selección de atributos arbitraria.
+              Se elegieron los atributos que, a simple vista, parecen más vinculados a la probabilidad
+              de sufrir una enfermedad cardíaca. 21 de los 76 atributos fueron seleccionados. La performance
+              de este modelo es la siguiente:
+          </p>
+          <pre><code>
+PerformanceVector:
+accuracy: 48.39% +/- 4.34% (micro average: 48.39%)
+ConfusionMatrix:
+True:	0	2	1	3	4
+    0:	319	15	51	16	6
+    2:	19	35	60	46	13
+    1:	52	35	56	30	6
+    3:	9	30	19	21	13
+    4:	5	15	5	19	4
+            </code></pre>
+            <p>
+                El segundo modelo fue elaborado tomando los 14 atributos recomendados en 
+                la metadata. Dichos atributos son los más utilizados 
+                en los experimentos publicados acerca de estos datasets. La performance 
+                del modelo es la siguiente:
+            </p>
+            <pre><code>
+PerformanceVector:
+accuracy: 51.83% +/- 3.92% (micro average: 51.84%)
+ConfusionMatrix:
+True:	0	2	1	3	4
+    0:	335	13	59	20	4
+    2:	17	33	40	36	11
+    1:	37	39	63	27	8
+    3:	11	31	24	32	16
+    4:	4	14	5	17	3
+            </code></pre>
+            <p>
+                El tercer modelo fue elaborado tomando todos los 76 atributos 
+                del dataset. La performance 
+                del modelo es la siguiente:
+            </p>
+          <pre><code>
+PerformanceVector:
+accuracy: 74.08% +/- 2.50% (micro average: 74.08%)
+ConfusionMatrix:
+True:	0	2	1	3	4
+    0:	392	0	0	0	6
+    2:	0	16	12	27	0
+    1:	9	71	168	50	0
+    3:	3	43	11	55	1
+    4:	0	0	0	0	35
+          </code></pre> 
+          <p>
+              Finalmente, para el último modelo se tomó una selección de atributos
+              muy particular. Se utilizó el operador "Optimize Selection"
+          </p>
+          <pre><code>
+PerformanceVector:
+accuracy: 86.10% +/- 3.27% (micro average: 86.10%)
+ConfusionMatrix:
+True:	0	2	1	3	4
+    0:	404	0	12	0	7
+    2:	0	66	7	28	0
+    1:	0	37	167	2	0
+    3:	0	27	5	102	0
+    4:	0	0	0	0	35
+          </code></pre>
         </div>
       </section>
     </div>
