@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+  <head>
+    <title>Other projects - Francisco Piria</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript
+      ><link rel="stylesheet" href="assets/css/noscript.css"
+    /></noscript>
+  </head>
+  <body class="is-preload">
+    <!-- Header -->
+    <header id="header">
+      <a href="index.html" class="title">Francisco Piria</a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+      <!-- Main -->
+      <section id="main" class="wrapper">
+        <div class="inner">
+          <h1 class="major">Other minor projects</h1>
+          <h2 class="major"><a id="linReg">Linear regression comparison</a></h1>
+          <div class="row">
+            <div class="col-6 col-12-medium">
+              <p>
+                The objective of this exercise is to visualize and 
+                compare the results of applying linear regression in two
+                different ways, using the same data. All the necessary calculations
+                were performed on a spreadsheet which can be found
+                <a href="https://github.com/Francisco42/portafolio_IA1/tree/master/UT3%20-%20Algoritmos%20lineales">here.</a> 
+                This example dataset
+                is composed of just one input variable "x" and one output
+                variable "y"
+              </p>
+              <p>
+                x = {1, 3, 2, 4, 6, 5} <br />
+                y = {1, 2, 3, 3, 2, 5}
+              </p>
+              <p>
+                A dot graph of the data can be seen in Figure 1.
+                The model will be a straight line defined by the equation:
+              </p>
+              <p>
+                y = b0 + b1 * x
+              </p>
+              <p>
+                Where b0 and b1 are the coefficients we need to estimate.
+                The first method of calculating these coefficients will be
+                by using the following formulas:
+              </p>
+              <p>
+                b1 = &sum; (x<sub>i</sub> - mean(x)) * (y<sub>i</sub> - mean(y)) / &sum; (x<sub>i</sub> - mean(x))<sup>2</sup><br />
+                b0 = mean(y) - b1 * mean(x)
+              </p>
+              <p>
+                This gives us the following coefficients:
+              </p>
+              <p>
+                b1 = 0.342857143<br />
+                b0 = 1.466666667
+              </p>
+              <p>
+                By using these in the previous equation, we can now
+                plot the line that forms the model. This graph is shown in Figure 2.
+                Finally, we can calculate the RMSE to get an estimate of the accuracy
+                of this model:
+              </p>
+              <p>
+                RMSE = 1.101225868
+              </p>
+              <p>
+                The second method of calculating the coefficients involves applying
+                gradient descent. Starting from b0 = 0.0 and b1 = 0.0, we can recalculate
+                them at every epoch by performing:
+              </p>
+              <p>
+                b0(next epoch) = b0 - learn rate * prediction error<br />
+                b1(next epoch) = b1 - learn rate * prediction error
+              </p>
+              <p>
+                Using a learn rate of 0.01, the final values of the
+                coefficients after 24 epochs is: 
+              </p>
+              <p>
+                b1 = 0.638197357<br />
+                b0 = 0.217811901
+              </p>
+              <p>
+                This gives us another model for our data. The resulting line graph
+                can be seen in Figure 3. As we can see, this model is slightly different from
+                the previous one. The RMSE for this model is:
+              </p>
+              <p>
+                RMSE = 1.230204322
+              </p>
+              <p>
+                The higher error indicates that the first model was a bit more accurate,
+                even though both lines like a good approximation to the original dots.
+                We can presume that this is possibly due to the limited number of epochs
+                in the gradient descent. Ideally, we would want to continue the process
+                until there is no significant reduction in the prediction errors.
+              </p>
+              <!-- <table>
+                <tr>
+                  <th>x</th>
+                  <th>predicted y</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>1.80952381</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>2.495238095</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>2.152380952</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>2.838095238</td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td>3.523809524</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>3.180952381</td>
+                </tr>
+              </table> -->
+            </div>
+            <div class="col-6 col-12-medium">
+              <span class="image fit">
+                <img src="./images/tasks/graph1.PNG" alt=""/>
+                <figcaption>Fig.1</figcaption>
+              </span>
+              <span class="image fit">
+                <img src="./images/tasks/graph2.PNG" alt=""/>
+                <figcaption>Fig.2</figcaption>
+              </span>
+              <span class="image fit">
+                <img src="./images/tasks/graph3.PNG" alt=""/>
+                <figcaption>Fig.3</figcaption>
+              </span>
+            </div>
+          </div>
+          <hr />
+          <h2 class="major"><a id="titanic">Dataset "Titanic"</a></h2>
+          <p>
+            Heart disease has a high prevalence. Approximately
+            3-5% of hospital admissions are related to
+            these incidents. The costs are very high, reaching up to 2%
+            of total health costs in developed countries.
+            Building an effective disease management strategy requires
+            the analysis of a large amount of data, the early detection of
+            disease, assessment of severity and early prediction of
+            adverse events. This will inhibit the progression of the disease,
+            improve the quality of life of patients and reduce the associated
+            medical costs.
+          </p>
+          <hr />
+          <h2 class="major"><a id="cardiac">Prediction of second cardiac arrest</a></h1>
+          <div class="row">
+            <div class="col-6 col-12-medium">
+              <p>
+                Heart disease has a high prevalence. Approximately
+                3-5% of hospital admissions are related to
+                these incidents. The costs are very high, reaching up to 2%
+                of total health costs in developed countries.
+                Building an effective disease management strategy requires
+                the analysis of a large amount of data, the early detection of
+                disease, assessment of severity and early prediction of
+                adverse events. This will inhibit the progression of the disease,
+                improve the quality of life of patients and reduce the associated
+                medical costs.
+              </p>
+            </div>
+            <div class="col-6 col-12-medium">
+              <p>
+                Heart disease has a high prevalence. Approximately
+                3-5% of hospital admissions are related to
+                these incidents. The costs are very high, reaching up to 2%
+                of total health costs in developed countries.
+                Building an effective disease management strategy requires
+                the analysis of a large amount of data, the early detection of
+                disease, assessment of severity and early prediction of
+                adverse events. This will inhibit the progression of the disease,
+                improve the quality of life of patients and reduce the associated
+                medical costs.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="wrapper alt">
+      <div class="inner"></div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
