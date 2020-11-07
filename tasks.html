@@ -163,20 +163,6 @@
           </div>
           <hr />
           <h2 class="major"><a id="titanic">Dataset "Titanic"</a></h2>
-          <p>
-            Heart disease has a high prevalence. Approximately
-            3-5% of hospital admissions are related to
-            these incidents. The costs are very high, reaching up to 2%
-            of total health costs in developed countries.
-            Building an effective disease management strategy requires
-            the analysis of a large amount of data, the early detection of
-            disease, assessment of severity and early prediction of
-            adverse events. This will inhibit the progression of the disease,
-            improve the quality of life of patients and reduce the associated
-            medical costs.
-          </p>
-          <hr />
-          <h2 class="major"><a id="cardiac">Prediction of second cardiac arrest</a></h1>
           <div class="row">
             <div class="col-6 col-12-medium">
               <p>
@@ -205,6 +191,86 @@
                 improve the quality of life of patients and reduce the associated
                 medical costs.
               </p>
+            </div>
+          </div>
+          <hr />
+          <h2 class="major"><a id="cardiac">Prediction of second cardiac arrest</a></h1>
+          <div class="row">
+            <div class="col-6 col-12-medium">
+              <p>
+                This exercise is based on the case of a cardiologist who
+                wishes to offer special treatments to patients of his who 
+                have an increased risk of suffering a second heart attack, in order
+                to reduce the risk.
+                The doctor has access to the medical records of all his patients,
+                and wants to use these records to determine those who would benefit
+                the most from these treatments. To this end, we will generate
+                a logistic regression model with the help of RapidMiner. 
+              </p>
+              <p>
+                The database of medical records contains two datasets. The first one
+                contains the records of patients who have already suffered a heart attack, 
+                with an attribute to indicate whether they had a second one or not. 
+                This dataset wil be used to train the model. The second dataset contains
+                records of patients who have suffered one, but not yet two heart attacks.
+                This is the data that will be used for prediction.
+              </p>
+              <p>
+                When we import the data into RapidMiner, first we need to convert the label 
+                attribute ("2do_Ataque_Corazon") from polynominal into binominal, since we want
+                to predict between two classes (yes/no). Then we also want to make sure that every other 
+                attribute in the dataset has only numerical values, which they do. 
+                This is necessary since it's the only type of value accepted by the 
+                logistic regression operator. Finally, we also need to check that the ranges 
+                of the values seen in the training and testing datasets are similar. 
+                This is important because a large amount of data is required to train a 
+                model, and there may not be enough useful data locally. It may be 
+                necessary to use data from other places in the world for training, 
+                therefore it is necessary to verify that the examples are similar to
+                those for which the model will attempt to predict. If not, the model 
+                would be trained with data that does not match the local data, 
+                and it would give incorrect results.<br />
+                The statistics of the attributes can be seen in Figure 1 for the training
+                dataset, and in Figure 2 for the prediction dataset. We can see here that the ranges
+                are indeed the same.
+              </p>
+              <p>
+                With all that done, we can now finish the RapidMiner process, which can 
+                be seen in Figure 3. Out of the 690 patients in the testing
+                dataset, the model predicted that 350 will suffer a second
+                heart attack more likely than not. As an example, the confidence
+                of the first 20 predictions is shown in Figure 4.
+              </p>
+              <p>
+                The doctor would like to treat as many patients as he can, 
+                even if their risk is low. But still, resources are limited.
+                Given that only a limited number of patients can receive the 
+                treatment, in a real system it would be necessary to define a 
+                threshold for the confidence 
+                of the model's prediction. Only patients whose prediction of having a 
+                second attack is above the confidence threshold would be treated,
+                since those would be the ones most at risk.
+              </p>
+            </div>
+            <div class="col-6 col-12-medium">
+              <div class="col-6 col-12-medium">
+                <span class="image fit">
+                  <img src="./images/tasks/stat1.PNG" alt=""/>
+                  <figcaption>Fig.1</figcaption>
+                </span>
+                <span class="image fit">
+                  <img src="./images/tasks/stat2.PNG" alt=""/>
+                  <figcaption>Fig.2</figcaption>
+                </span>
+                <span class="image fit">
+                  <img src="./images/tasks/process1.PNG" alt=""/>
+                  <figcaption>Fig.3</figcaption>
+                </span>
+                <span class="image fit">
+                  <img src="./images/tasks/prediction1.PNG" alt=""/>
+                  <figcaption>Fig.4</figcaption>
+                </span>
+              </div>
             </div>
           </div>
         </div>
