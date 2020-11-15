@@ -235,7 +235,6 @@
               </p>
             </div>
             <div class="col-6 col-12-medium">
-              <div class="col-6 col-12-medium">
                 <span class="image fit">
                   <img src="./images/tasks/stat1.PNG" alt=""/>
                   <figcaption>Fig.1</figcaption>
@@ -252,7 +251,83 @@
                   <img src="./images/tasks/prediction1.PNG" alt=""/>
                   <figcaption>Fig.4</figcaption>
                 </span>
-              </div>
+            </div>
+          </div>
+          <hr />
+          <h2 class="major"><a id="cereal">Cereal nutrition data analysis</a></h1>
+          <div class="row">
+            <div class="col-6 col-12-medium">
+              <p>
+                In this exercise we will be working with a dataset containing
+                information about 80 different cereal products. Most of the
+                fields in the dataset are related to the nutrients found in
+                these cereals, such as calories, protein, sodium, and more.
+                The dataset contains 16 attributes, 13 of which are numerical.
+                The objective of this exercise is to reduce these 13 attributes
+                into a smaller subset, applying Principal Component Analysis
+                in RapidMiner.
+              </p>
+              <p>
+                The first thing we need to do when importing the data is to
+                filter the attributes "name", "manufacturer", and "type" since 
+                they are non-numerical, meaning that they can't be used for PCA.<br />
+                PCA also requires that there be no missing values, so 
+                we need to replace them. Luckily, there are only 4 missing values
+                in the entire dataset, so we can replace them with averages without
+                it having a significant impact.<br />
+                The last thing to do before applying PCA is normalizing the data.
+                If there was one atribute for which the range was hundreds of times larger
+                than the ranges of other ones, then that attribute would form 
+                most of the variance in the dataset, and PCA would wrongly identify
+                it as the most significant one. PCA is very sensitive to scaling
+                in the data, so it's necessary to apply a range transformation
+                to make sure that it doesn't overlook any attributte.<br /> 
+                For the PCA operator we select "keep variance" as the type
+                of dimensionality reduction, since we want a subset of attributes
+                that account for a certain amount of variance in the dataset,
+                but we don't know beforehand how many principal components it would
+                take. For the variance threshold we use the default 0.95. The process
+                is shown in Figure 1. 
+              </p>
+              <p>
+                When we run the process, we can see the resulting data in Figure 2, 
+                along with the eigenvalues in Figure 3. The cumulative variance of
+                the first 8 principal components was enough to account for 97%
+                of the dataset's total variance. In Figure 4 we can see the eigenvectors,
+                which show us how the principal components are composed. We want 
+                to identify the original attributes which had the most 
+                weight in these PCs. To do that we can sort the eigenvalues
+                for each PC, and then select the 2 or 3 most impactful attributes.
+                If we select the 2 most significant attributes for each of 
+                the first 8 PCs, we end up with a subset of 8 attributes:
+                "shelf", "potass", "sugars", "calories", "sodium", "carbo", 
+                "vitamins" and "protein".<br />
+                For this example exercise, we were able to reduce a set of
+                13 attributes down to just 8 (more than a third of the original
+                amount). It may not mean much with such a small number of attributes,
+                but with very large datasets that contain hundreds or thousands of 
+                attributes it would make a huge difference in terms of the 
+                computational performance of various machine learning algorithms.
+                This is why PCA is such a widely used tool for dimensionality reduction.
+              </p>
+            </div>
+            <div class="col-6 col-12-medium">
+                <span class="image fit">
+                  <img src="./images/tasks/pca1.PNG" alt=""/>
+                  <figcaption>Fig.1</figcaption>
+                </span>
+                <span class="image fit">
+                  <img src="./images/tasks/pca2.PNG" alt=""/>
+                  <figcaption>Fig.2</figcaption>
+                </span>
+                <span class="image fit">
+                  <img src="./images/tasks/pca3.PNG" alt=""/>
+                  <figcaption>Fig.3</figcaption>
+                </span>
+                <span class="image fit">
+                  <img src="./images/tasks/pca4.PNG" alt=""/>
+                  <figcaption>Fig.4</figcaption>
+                </span>
             </div>
           </div>
         </div>
