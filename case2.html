@@ -166,10 +166,18 @@
             The first of these substreams focuses on processing the customer
             table (Figure 2). The main operations performed are:
             <ul>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li>Changing the type of the attribute "sex"
+                    from nominal to binominal
+                </li>
+                <li>Computing the customers current
+                    age as of 2020. For this we first need to join
+                    the customer records with the date table, and apply a 
+                    left join so we end up with one record per customer
+                </li>
+                <li>Leaving behind the customers' first and last names,
+                    as well as their birth date ID, since they almost take on
+                    individual values for every customer
+                </li>
             </ul>
           </p>
           <h4 class="major">Account data substream</h4>
@@ -179,7 +187,8 @@
           </span>
           <p>
             The second substream focuses on processing the account
-            table (Figure 3). The main operations performed are:
+            table (Figure 3). This one is split even further. 
+            The main operations performed are:
             <ul>
                 <li></li>
                 <li></li>
