@@ -99,11 +99,27 @@
           </ul>
           <h2 class="major">Data understanding</h2>
           <p>
-            The target variable (num) represents the diagnosis. It has 5
-            possible values. The value 0 represents absence of disease
-            heart rate, and values ​​1, 2, 3, and 4 represent different degrees of
-            disease.
+            Now we need to see more carefully what the available
+            data is made up of. As mentioned
+previously, there are several tables in the System, in a Data Warehousing configuration of type
+"Star", where we have a "facts table" and several dimension tables.
           </p>
+          <ul>
+            Dim_Customers: a row for each customer, includes personal data: first and last name, date of
+            Birth (as a reference to the Dim_CalendarDates table), occupation), gender, marital status, and income.
+            The "income" attribute is set to zero for young clients, but has many missing values
+            for adults.
+            • Dim_Accounts: a row for each account, with a reference to the account owner (customer).
+            Each account belongs to one of the four types CH01 to CH04 and has start and end dates (references
+            the Dim_CalendarDates table).
+            • Dim_CalendarDates: Contains a row for each of the 50,000 days January 1, 1900 to 22
+            November 2036
+            • Fact_Transactions: Records all the transactions that have been made in each account. Each
+            Transaction includes a reference to the account owner and the date of the transaction.
+            The type of the transaction has categories like "salary", etc (document)
+            The credit / debit marker (CR and DR values) indicates whether the money has been deposited or withdrawn from the account.
+            Amount is the corresponding value, always positive
+          </ul>
           <h2 class="major">Data preprocessing</h2>
           <p>
             The files from the 4 institutions separated the data
