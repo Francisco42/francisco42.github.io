@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<!--
+	Hyperspace by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+  <head>
+    <title>Case 2 - Francisco Piria</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript
+      ><link rel="stylesheet" href="assets/css/noscript.css"
+    /></noscript>
+  </head>
+  <body class="is-preload">
+    <!-- Header -->
+    <header id="header">
+      <a href="index.html" class="title">Francisco Piria</a>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Wrapper -->
+    <div id="wrapper">
+      <!-- Main -->
+      <section id="main" class="wrapper">
+        <div class="inner">
+          <h1 class="major">Affinity-based marketing</h1>
+          <p>
+            This exercise is based on one of the cases found 
+            in the book "RapidMiner:
+            Data Mining Use Cases and
+            Business Analytics Applications". <sup><a href="#ref">[1]</a></sup>
+          </p>
+          <p>
+            A fictional bank introduces a new financial product, 
+            a type of account with certain fees
+            and interest rates, different from other pre-existing products. 
+            Some customers are drawn to this product and open accounts
+            of that new type sometime after it's released, but others don't.
+            The bank's marketing department wants to sell more of the new account
+            through a direct mail campaign to customers who have not yet opted for it.
+            However, such a marketing campaign requires time and resources, so as 
+            not to waste efforts on customers who are unlikely to buy, they 
+            would like to target only the 20% of customers who have the highest
+            affinity for the product.
+          </p>
+          <p>
+            To determine which are the customers who would potentially 
+            want to buy the new
+            product, we can assume that the customers who have already purchased 
+            it (the buyers) are representative of those who have a great 
+            affinity for it. So we can search
+            for customers who have not yet purchased (non-buyers) but who are 
+            similar to the
+            buyers in other aspects. We expect that the more similar they are, 
+            the greater their affinity will be.
+            Therefore, identifying which of the customers' qualities
+            are indicative of their similarity is going to be one 
+            of the main challenges.
+            Then, we can use a machine learning algorithm to generate a 
+            ranking of non-buyers by their similarity to buyers, in which 
+            those who have
+            higher ranking will be customers predicted as potential new buyers.
+          </p>
+          <h2 class="major">Business understanding</h2>
+          <p>
+              The main takeaways that will help us better understand the context
+              of this project are:
+          </p>
+          <ul>
+            <li>The bank offers 4 types of accounts: CH01, CH02, CH03
+                and CH04. CH04 is the one that needs to be promoted.
+            </li>
+            <li>Each type of account has certain fees and monthly 
+                interest rates involved, but some customers recieve
+            special treatment due to their status or other particularities</li>
+            <li>A customer can have any number accounts (even zero), 
+                and any combination of types
+            </li>
+            <li>Accounts have opening and closing dates. A closed account
+                has a balance of 0 and can no longer accept transactions.
+                Opened accounts are considered "active", and a customer with at 
+                least one active account is an active customer
+            </li>
+            <li>Every transaction is automatically classified based on
+                a form that can be filled by the customer who initiates
+                the transaction. Example of these categories include:
+                cash withdrawals, salaries, and so on.
+            </li>
+          </ul>
+          <h2 class="major">Data understanding</h2>
+          <p>
+            The target variable (num) represents the diagnosis. It has 5
+            possible values. The value 0 represents absence of disease
+            heart rate, and values ​​1, 2, 3, and 4 represent different degrees of
+            disease.
+          </p>
+          <h2 class="major">Data preprocessing</h2>
+          <p>
+            The files from the 4 institutions separated the data
+            in more lines than necessary, which prevented importing them
+            easily in RapidMiner. Also, none of the files contained
+            a header row for the attribute names. To
+            solve both of these problems, the following Python code
+            was executed for each of the 4 files:
+          </p>
+          <pre><code>
+def parse_file(readFilename, writeFilename):
+    headerRow = "id ccf age sex painloc painexer relrest pncaden cp trestbps ..."
+    readfile = open(readFilename, 'r', errors='ignore')
+    writefile = open(writeFilename, 'w')
+    writefile.write(headerRow)
+    writeRow = ""
+    for row in readfile:
+        writeRow += row 
+        if ("name" in row):
+            writefile.write(writeRow)
+            writeRow = ""
+        else:
+            writeRow = writeRow.rstrip()
+            writeRow += " "
+    readfile.close()
+    writefile.close()
+          </code></pre>
+          <p>
+            After that processing, the files were imported into
+            RapidMiner. Since all 4 have the same format, it was possible to
+            simply join them using the "Append" operator. The
+            metadata of these datasets indicates that the numeric value
+            -9 is used to represent missing values ​​in attributes, so
+            it was also necessary to replace all occurrences of that value
+            with missing values, to later be able to handle them more easily.
+          </p>
+          <span class="image fit"
+            ><img src="images/data_prep_1.PNG" alt=""
+          /></span>
+          <p>
+            Although all the attributes are numerical, some of them
+            are continuous and others discrete. Missing values ​​in 
+            continuous attributes were replaced by the mean of that attribute. This
+            could be interpreted as, when in doubt, a patient is
+            "average". Similar reasoning is used for discreet attributes; 
+            in most of them, the values ​​represent
+            different classes indicative of the patient's health. It is assumed that
+            patient is "healthy" on an attribute if the value does not exist.
+          </p>
+          <h2 class="major">Modelling</h2>
+          <p>
+            To build the model, the classification algorithm Naive Bayes was used. 
+            Decision Trees was considered as another
+            alternative, but for this dataset in particular, there are
+            diagnoses that are much more rare than others, therefore
+            there is a risk that these cases will be lost with the pruning of the
+            tree, causing the model to not recognize them well. At the same
+            time, if you avoid pruning the tree and increase its maximum height, it is
+            likely to overfit this data.
+          </p>
+          <p>
+            To determine the best subset of attributes to consider,
+            RapidMiner's "Optimize Selection" operator was used. This
+            operator performs a feature selection with an evolutionary algorithm
+            (the selection algorithm that generally gets the best
+            results). 44 of the 76 attributes were selected.
+            Finally, a Cross Validation was performed on the model to
+            evaluate its accuracy. The performance was as follows:
+          </p>
+          <pre><code>
+PerformanceVector:
+accuracy: 77.86% +/- 3.82% (micro average: 77.86%)
+ConfusionMatrix:
+True:	0	2	1	3	4
+    0:	401	0	1	0	6
+    2:	2	10	6	12	0
+    1:	0	76	175	41	0
+    3:	1	44	9	79	1
+    4:	0	0	0	0	35
+        </code></pre>
+          <p>
+            The model had a precision of approximately 78%, 
+            which is a decent result. Observing the confusion matrix,
+            we can also see that the model was particularly
+            good at distinguishing cases where the target variable is 0
+            from the other cases. Going back to the meaning of said variable, the
+            value 0 represents absence of heart disease, and values ​​1,
+            2, 3 and 4 represent different degrees of disease. This means
+            that a model like this one can be of great real utility; it could be
+            used, for example, in a hospital as a first "filter" to
+            know if a patient has a heart disease or not. If he
+            model predicts yes, then the patient is referred to a doctor
+            that can better diagnose the degree of
+            disease. This way, a lot of time and resources would be
+            saved from all the consultations of
+            healthy patients.
+          </p>
+          <h4 class="major">Other experiments</h4>
+          <p>
+            Several other Naive Bayes models were developed with the aim of
+            experimenting using different subsets of attributes. 
+            <!-- TODO: Check This -->
+            (The models were made with and without Laplace correction (the
+            single parameter of the Naive Bayes operator). In all cases, the
+            model with the correction was slightly more accurate than the one without
+            had. Therefore, all models were made with that
+            correction.) 
+            Two of the models are described below as an
+            example.
+          </p>
+          <p>
+            One of the models was made taking the 14 attributes
+            recommended in the metadata. These attributes are the most used
+            in published experiments on these databases. The
+            model performance is as follows:
+          </p>
+          <pre><code>
+PerformanceVector:
+accuracy: 51.83% +/- 3.92% (micro average: 51.84%)
+ConfusionMatrix:
+True:	0	2	1	3	4
+    0:	335	13	59	20	4
+    2:	17	33	40	36	11
+    1:	37	39	63	27	8
+    3:	11	31	24	32	16
+    4:	4	14	5	17	3
+            </code></pre>
+          <p>
+            Another model was made taking all 76 attributes of the
+            dataset. The performance of the model is as follows:
+          </p>
+          <pre><code>
+PerformanceVector:
+accuracy: 74.08% +/- 2.50% (micro average: 74.08%)
+ConfusionMatrix:
+True:	0	2	1	3	4
+    0:	392	0	0	0	6
+    2:	0	16	12	27	0
+    1:	9	71	168	50	0
+    3:	3	43	11	55	1
+    4:	0	0	0	0	35
+          </code></pre>
+          <p>
+            None of the experiments reached the precision of the first model,
+            further indicating that the selection of attributes was indeed
+            optimal.
+          </p>
+          <h2 class="major"><a id="ref">References</a></h2>
+          <p>
+            [1]. Hofmann, M. & Klinkenberg, R. (2014). RapidMiner:
+            Data Mining Use Cases and Business Analytics Applications<br />
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer" class="wrapper alt">
+      <div class="inner"></div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
