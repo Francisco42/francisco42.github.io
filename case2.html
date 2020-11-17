@@ -100,173 +100,87 @@
           <h2 class="major">Data understanding</h2>
           <p>
             Now we need to see more carefully what the available
-            data is made up of. As mentioned
-previously, there are several tables in the System, in a Data Warehousing configuration of type
-"Star", where we have a "facts table" and several dimension tables.
+            data is made up of. The bank has chosen to store
+            this data in a data warehouse with a star schema design, 
+            where we have a fact table and 
+            several dimension tables (Figure 1).
           </p>
+          <span class="image fit">
+              <img src="images/affinity1.PNG" alt=""/>
+              <figcaption>Fig.1</figcaption>
+            </span>
           <ul>
-            Dim_Customers: a row for each customer, includes personal data: first and last name, date of
-            Birth (as a reference to the Dim_CalendarDates table), occupation), gender, marital status, and income.
-            The "income" attribute is set to zero for young clients, but has many missing values
-            for adults.
-            • Dim_Accounts: a row for each account, with a reference to the account owner (customer).
-            Each account belongs to one of the four types CH01 to CH04 and has start and end dates (references
-            the Dim_CalendarDates table).
-            • Dim_CalendarDates: Contains a row for each of the 50,000 days January 1, 1900 to 22
-            November 2036
-            • Fact_Transactions: Records all the transactions that have been made in each account. Each
-            Transaction includes a reference to the account owner and the date of the transaction.
-            The type of the transaction has categories like "salary", etc (document)
-            The credit / debit marker (CR and DR values) indicates whether the money has been deposited or withdrawn from the account.
-            Amount is the corresponding value, always positive
+            <li>
+                <b>Dim_Customers:</b> a row for each customer, includes 
+                personal data such as first and last name, date of
+                Birth (as a reference to the Dim_CalendarDates table), occupation, gender, 
+                marital status, and income.
+                The "income" attribute is set to zero for young clients, 
+                but has many missing values
+                for adults.
+            </li>
+            <li>
+                <b>Dim_Accounts:</b> a row for each account, with a reference 
+                to the account owner.
+                Each account belongs to one of the four types CH01 through CH04 
+                and has start and end dates (references the Dim_CalendarDates table).
+            </li>
+            <li>
+                <b>Dim_CalendarDates:</b> Contains a row for each of the 50,000 days 
+                from January 1st, 1900 to November 22nd 2036. One row represents
+                "infinity", which is used as the end date for accounts that do 
+                not yet have one. The Date_ID attribute numbers the days conscutively. 
+            </li>
+            <li>
+                <b>Fact_Transactions:</b> Records all the transactions that have
+                been made in each account. Each
+                transaction includes a reference to the account owner and its 
+                date.
+                The credit/debit flag (values CR and DR) indicates whether the 
+                money has been deposited or withdrawn from the account.
+            </li>
           </ul>
-          <h2 class="major">Data preprocessing</h2>
           <p>
-            The files from the 4 institutions separated the data
-            in more lines than necessary, which prevented importing them
-            easily in RapidMiner. Also, none of the files contained
-            a header row for the attribute names. To
-            solve both of these problems, the following Python code
-            was executed for each of the 4 files:
+              Compared to real data, this data has been simplified in a number of ways.
+              One of these is that this star schema does not accomodate for
+                slowly changing dimensions,
+              which is a mechanism that enables a way of keeping a "history" 
+              of values that change over time.
+              Another simplification is that some customers are grouped together.
+              A customer may represent a married couple, an entire household, or even a 
+              corporate entity.
           </p>
-          <pre><code>
-def parse_file(readFilename, writeFilename):
-    headerRow = "id ccf age sex painloc painexer relrest pncaden cp trestbps ..."
-    readfile = open(readFilename, 'r', errors='ignore')
-    writefile = open(writeFilename, 'w')
-    writefile.write(headerRow)
-    writeRow = ""
-    for row in readfile:
-        writeRow += row 
-        if ("name" in row):
-            writefile.write(writeRow)
-            writeRow = ""
-        else:
-            writeRow = writeRow.rstrip()
-            writeRow += " "
-    readfile.close()
-    writefile.close()
-          </code></pre>
+          <h2 class="major">Data preparation</h2>
           <p>
-            After that processing, the files were imported into
-            RapidMiner. Since all 4 have the same format, it was possible to
-            simply join them using the "Append" operator. The
-            metadata of these datasets indicates that the numeric value
-            -9 is used to represent missing values ​​in attributes, so
-            it was also necessary to replace all occurrences of that value
-            with missing values, to later be able to handle them more easily.
+            In order to build modelling algorithms from the data, we first
+            need to have a single table of clean data that integrates
+            all 4 of the tables mentioned previously. To do that we will build 
+            3 subprocesses in RapidMiner. 
           </p>
-          <span class="image fit"
-            ><img src="images/data_prep_1.PNG" alt=""
-          /></span>
+          <h4 class="major">Customer data substream</h4>
           <p>
-            Although all the attributes are numerical, some of them
-            are continuous and others discrete. Missing values ​​in 
-            continuous attributes were replaced by the mean of that attribute. This
-            could be interpreted as, when in doubt, a patient is
-            "average". Similar reasoning is used for discreet attributes; 
-            in most of them, the values ​​represent
-            different classes indicative of the patient's health. It is assumed that
-            patient is "healthy" on an attribute if the value does not exist.
+
           </p>
-          <h2 class="major">Modelling</h2>
+          <span class="image fit">
+            <img src="images/affinity_sub1.PNG" alt=""/>
+            <figcaption>Fig.2</figcaption>
+          </span>
+          <h4 class="major">Account data substream</h4>
           <p>
-            To build the model, the classification algorithm Naive Bayes was used. 
-            Decision Trees was considered as another
-            alternative, but for this dataset in particular, there are
-            diagnoses that are much more rare than others, therefore
-            there is a risk that these cases will be lost with the pruning of the
-            tree, causing the model to not recognize them well. At the same
-            time, if you avoid pruning the tree and increase its maximum height, it is
-            likely to overfit this data.
+
           </p>
+          <span class="image fit">
+            <img src="images/affinity_sub2.PNG" alt=""/>
+            <figcaption>Fig.3</figcaption>
+          </span>
+          <h4 class="major">Transaction data substream</h4>
           <p>
-            To determine the best subset of attributes to consider,
-            RapidMiner's "Optimize Selection" operator was used. This
-            operator performs a feature selection with an evolutionary algorithm
-            (the selection algorithm that generally gets the best
-            results). 44 of the 76 attributes were selected.
-            Finally, a Cross Validation was performed on the model to
-            evaluate its accuracy. The performance was as follows:
+
           </p>
-          <pre><code>
-PerformanceVector:
-accuracy: 77.86% +/- 3.82% (micro average: 77.86%)
-ConfusionMatrix:
-True:	0	2	1	3	4
-    0:	401	0	1	0	6
-    2:	2	10	6	12	0
-    1:	0	76	175	41	0
-    3:	1	44	9	79	1
-    4:	0	0	0	0	35
-        </code></pre>
-          <p>
-            The model had a precision of approximately 78%, 
-            which is a decent result. Observing the confusion matrix,
-            we can also see that the model was particularly
-            good at distinguishing cases where the target variable is 0
-            from the other cases. Going back to the meaning of said variable, the
-            value 0 represents absence of heart disease, and values ​​1,
-            2, 3 and 4 represent different degrees of disease. This means
-            that a model like this one can be of great real utility; it could be
-            used, for example, in a hospital as a first "filter" to
-            know if a patient has a heart disease or not. If he
-            model predicts yes, then the patient is referred to a doctor
-            that can better diagnose the degree of
-            disease. This way, a lot of time and resources would be
-            saved from all the consultations of
-            healthy patients.
-          </p>
-          <h4 class="major">Other experiments</h4>
-          <p>
-            Several other Naive Bayes models were developed with the aim of
-            experimenting using different subsets of attributes. 
-            <!-- TODO: Check This -->
-            (The models were made with and without Laplace correction (the
-            single parameter of the Naive Bayes operator). In all cases, the
-            model with the correction was slightly more accurate than the one without
-            had. Therefore, all models were made with that
-            correction.) 
-            Two of the models are described below as an
-            example.
-          </p>
-          <p>
-            One of the models was made taking the 14 attributes
-            recommended in the metadata. These attributes are the most used
-            in published experiments on these databases. The
-            model performance is as follows:
-          </p>
-          <pre><code>
-PerformanceVector:
-accuracy: 51.83% +/- 3.92% (micro average: 51.84%)
-ConfusionMatrix:
-True:	0	2	1	3	4
-    0:	335	13	59	20	4
-    2:	17	33	40	36	11
-    1:	37	39	63	27	8
-    3:	11	31	24	32	16
-    4:	4	14	5	17	3
-            </code></pre>
-          <p>
-            Another model was made taking all 76 attributes of the
-            dataset. The performance of the model is as follows:
-          </p>
-          <pre><code>
-PerformanceVector:
-accuracy: 74.08% +/- 2.50% (micro average: 74.08%)
-ConfusionMatrix:
-True:	0	2	1	3	4
-    0:	392	0	0	0	6
-    2:	0	16	12	27	0
-    1:	9	71	168	50	0
-    3:	3	43	11	55	1
-    4:	0	0	0	0	35
-          </code></pre>
-          <p>
-            None of the experiments reached the precision of the first model,
-            further indicating that the selection of attributes was indeed
-            optimal.
-          </p>
+          <span class="image fit">
+            <img src="images/affinity_sub3.PNG" alt=""/>
+            <figcaption>Fig.4</figcaption>
+          </span>
           <h2 class="major"><a id="ref">References</a></h2>
           <p>
             [1]. Hofmann, M. & Klinkenberg, R. (2014). RapidMiner:
